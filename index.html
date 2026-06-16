@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC Multichain Agent v2 - Real Tx</title>
+    <title>ARC Multichain Agent v2 - Direct Tx</title>
     <!-- Tailwind CSS for Dark Mode Styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Ethers.js for Live Smart Contract Interactivity -->
+    <!-- Ethers.js for Live Wallet and Smart Contract Interactivity -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.1/ethers.umd.min.js"></script>
 </head>
 <body class="min-h-screen bg-[#080B11] text-white font-sans p-4 flex flex-col items-center">
@@ -14,12 +14,13 @@
     <!-- Main Wrapper App Container -->
     <div class="w-full max-w-md space-y-4 my-6">
         
-        <!-- App Header -->
+        <!-- App Header (Matching image 1000249474_2.jpg) -->
         <div class="flex justify-between items-center bg-[#111622]/40 p-4 border border-[#1f2636] rounded-xl shadow-md">
             <div class="flex items-center gap-2.5">
                 <div class="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-xs shadow-lg shadow-blue-500/20">Ω</div>
                 <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC MULTICHAIN AGENT</h1>
             </div>
+            <!-- Dynamic Connection Button -->
             <button id="connectBtn" class="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-full font-mono font-medium transition-all cursor-pointer">
                 🔌 Connect Wallet
             </button>
@@ -58,34 +59,37 @@
         <div class="flex items-center gap-2 p-3 bg-emerald-950/20 border border-emerald-500/20 rounded-xl">
             <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <p class="text-[11px] text-emerald-400 font-mono">
-                ⚡ <strong>Gasless Routing Active:</strong> System ready for optimized multichain operations.
+                ⚡ <strong>Gasless Routing Active:</strong> System ready for verified on-chain execution.
             </p>
         </div>
 
-        <!-- 💬 SECTION 2: Talk to Agent (Real Transaction System) -->
+        <!-- 💬 SECTION 2: Talk to Agent (Guaranteed Real Transaction) -->
         <div class="bg-[#111622] border border-[#1f2636] rounded-2xl p-5 shadow-xl space-y-4">
             <div class="space-y-1">
                 <h2 class="text-sm font-semibold text-gray-200">Talk to Agent</h2>
-                <p class="text-[11px] text-gray-400">Give instructions to routing system:</p>
+                <p class="text-[11px] text-gray-400">Execute verified USDC transfers instantly:</p>
             </div>
 
-            <!-- Interactive Agent Terminal Log -->
-            <div id="agentTerminal" class="bg-[#080B11] border border-[#1f2636] rounded-xl p-3.5 font-mono text-[11px] space-y-2 max-h-60 overflow-y-auto">
-                <p class="text-gray-500">🤖 Agent: Awaiting your command. Connect wallet and specify amount and recipient address.</p>
+            <!-- Terminal Output Log -->
+            <div id="agentTerminal" class="bg-[#080B11] border border-[#1f2636] rounded-xl p-3.5 font-mono text-[11px] space-y-2">
+                <p class="text-gray-500">🤖 Agent: Setup loaded. Please connect wallet to begin.</p>
             </div>
 
-            <!-- Input Form for Real Execution -->
-            <div class="flex gap-2">
-                <input id="agentInput" type="text" placeholder="e.g., Send 1 USDC to 0x..." class="flex-1 bg-[#080B11] border border-[#2d374f] rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:border-blue-500">
-                <button id="sendCmdBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all">Send</button>
+            <!-- Simplified Direct Inputs to ensure MetaMask pops up smoothly -->
+            <div class="space-y-2">
+                <input id="targetAddress" type="text" placeholder="Recipient Address (0x...)" class="w-full bg-[#080B11] border border-[#2d374f] rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:border-blue-500">
+                <div class="flex gap-2">
+                    <input id="targetAmount" type="number" step="any" placeholder="Amount (e.g. 1)" class="flex-1 bg-[#080B11] border border-[#2d374f] rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:border-blue-500">
+                    <button id="sendTxBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all">Execute Tx</button>
+                </div>
             </div>
 
-            <!-- Prompt Suggestions -->
+            <!-- Quick Action Shortcuts -->
             <div class="space-y-1.5">
-                <span class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold block">Quick Prompt Fill:</span>
+                <span class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold block">Quick Address Fill:</span>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="fillPrompt('Send 1 USDC to ')" class="text-[10px] bg-[#1a2030] hover:bg-[#232b40] border border-[#2d374f] px-2.5 py-1.5 rounded-lg text-gray-300 transition-all cursor-pointer">
-                        💸 Real Transfer 1 USDC
+                    <button onclick="fillForm('0xef084f79208db9d282df5470640de93196dc52de', 1)" class="text-[10px] bg-[#1a2030] hover:bg-[#232b40] border border-[#2d374f] px-2.5 py-1.5 rounded-lg text-gray-300 transition-all cursor-pointer">
+                        📋 Fill Demo Target Address
                     </button>
                 </div>
             </div>
@@ -93,11 +97,11 @@
 
     </div>
 
-    <!-- Live Smart Contract & Agent Logic -->
+    <!-- Core Javascript Code -->
     <script>
         let provider, signer, userAddress;
-        
-        // Multi-chain contract setup from your screenshot 1000249475.jpg
+
+        // Token mapping matching your script exactly (Image 1000249475.jpg)
         const tokenContracts = {
             "5042002": "0x3600000000000000000000000000000000000000", // ARC Native USDC
             "11155111": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", // Sepolia USDC
@@ -115,31 +119,35 @@
         const addressTxt = document.getElementById('addressTxt');
         const chainIdTxt = document.getElementById('chainIdTxt');
         const balanceTxt = document.getElementById('balanceTxt');
-        const agentInput = document.getElementById('agentInput');
-        const sendCmdBtn = document.getElementById('sendCmdBtn');
+        const targetAddress = document.getElementById('targetAddress');
+        const targetAmount = document.getElementById('targetAmount');
+        const sendTxBtn = document.getElementById('sendTxBtn');
         const agentTerminal = document.getElementById('agentTerminal');
 
-        function fillPrompt(text) {
-            agentInput.value = text;
-            agentInput.focus();
+        function fillForm(addr, amt) {
+            targetAddress.value = addr;
+            targetAmount.value = amt;
+            agentTerminal.innerHTML = `<p class="text-cyan-400">🤖 Agent: Quick inputs configured. Ready for submission.</p>`;
         }
 
-        async function updateBalance(account, chainId) {
+        // Live Balance Fetch Function
+        async function fetchLiveBalance(account, chainId) {
             try {
                 const contractAddress = tokenContracts[chainId.toString()] || tokenContracts["DEFAULT_ARC"];
                 const contract = new ethers.Contract(contractAddress, usdcAbi, provider);
                 const balance = await contract.balanceOf(account);
                 
-                // USDC has 6 decimals on most testnets/mainnets
-                const formattedBalance = ethers.formatUnits(balance, 6);
-                balanceTxt.innerText = `${parseFloat(formattedBalance).toFixed(2)} USDC`;
+                // standard USDC has 6 decimal points
+                const formatted = ethers.formatUnits(balance, 6);
+                balanceTxt.innerText = `${parseFloat(formatted).toFixed(2)} USDC`;
             } catch (err) {
-                console.error("Balance fetch failed, falling back to mock UI", err);
-                balanceTxt.innerText = "76.21 USDC"; 
+                console.error("Balance read failed", err);
+                balanceTxt.innerText = "0.00 USDC";
             }
         }
 
-        async function initWallet() {
+        // Wallet Connection Logic
+        async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     provider = new ethers.BrowserProvider(window.ethereum);
@@ -148,6 +156,7 @@
                     userAddress = accounts[0];
                     const network = await provider.getNetwork();
 
+                    // Update UI Dashboard Data
                     statusTxt.innerText = "Connected";
                     statusTxt.className = "text-emerald-400 font-bold";
                     addressTxt.innerText = userAddress;
@@ -156,88 +165,74 @@
                     connectBtn.innerText = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
                     connectBtn.className = "text-xs bg-emerald-500 text-black px-3 py-1.5 rounded-full font-mono font-bold transition-all";
 
-                    await updateBalance(userAddress, network.chainId);
-                    agentTerminal.innerHTML += `<p class="text-emerald-400">● Wallet successfully locked in. Secure node communication active.</p>`;
+                    await fetchLiveBalance(userAddress, network.chainId);
+                    agentTerminal.innerHTML = `<p class="text-emerald-400">● Secure wallet link complete. Ready to dispatch cross-chain payloads.</p>`;
                 } catch (err) {
-                    agentTerminal.innerHTML += `<p class="text-red-400">❌ Connection rejected: ${err.message}</p>`;
+                    agentTerminal.innerHTML = `<p class="text-red-400">❌ Connection error: ${err.message}</p>`;
                 }
             } else {
                 alert("Please install MetaMask!");
             }
         }
 
-        async function executeRealTransaction() {
-            const command = agentInput.value.trim();
-            if (!command) return;
+        // Real Wallet Popup & Transaction Handler
+        async function handleRealTransfer() {
+            const recipient = targetAddress.value.trim();
+            const amount = targetAmount.value.trim();
 
             if (!signer) {
-                agentTerminal.innerHTML += `<p class="text-amber-400">⚠️ Please connect your wallet first!</p>`;
+                agentTerminal.innerHTML = `<p class="text-amber-400">⚠️ Please link your wallet first using 'Connect Wallet'.</p>`;
                 return;
             }
 
-            // Simple Intent Parsing from text input
-            // Pattern example: "Send 1 USDC to 0xef084f79208db9d282df5470640de93196dc52de"
-            const addressRegex = /(0x[a-fA-F0-9]{40})/;
-            const amountRegex = /([0-9.]+)\s*USDC/i;
-
-            const targetAddressMatch = command.match(addressRegex);
-            const amountMatch = command.match(amountRegex);
-
-            if (!targetAddressMatch || !amountMatch) {
-                agentTerminal.innerHTML += `
-                    <p class="text-red-400 mt-2">❌ Syntax Error. Could not resolve transaction parameters.</p>
-                    <p class="text-gray-400 text-[10px]">Make sure to include both amount and 0x address. Example: 'Send 1 USDC to 0x...'</p>
-                `;
+            if (!recipient || !amount) {
+                agentTerminal.innerHTML = `<p class="text-red-400">❌ Error: Missing recipient address or USDC amount!</p>`;
                 return;
             }
-
-            const recipient = targetAddressMatch[1];
-            const amountString = amountMatch[1];
-            
-            agentTerminal.innerHTML += `<p class="text-blue-400 mt-2">👤 User Request: ${command}</p>`;
-            agentTerminal.innerHTML += `<p class="text-cyan-400 font-bold">🤖 Agent: Parsing intent... Targeting ${amountString} USDC execution payload to ${recipient.substring(0,6)}...</p>`;
 
             try {
+                agentTerminal.innerHTML = `<p class="text-cyan-400 animate-pulse">🤖 Agent: Initiating contract pipeline... Opening MetaMask wallet popup...</p>`;
+                
                 const network = await provider.getNetwork();
                 const contractAddress = tokenContracts[network.chainId.toString()] || tokenContracts["DEFAULT_ARC"];
                 const contract = new ethers.Contract(contractAddress, usdcAbi, signer);
 
-                // Convert normal number string to 6-decimal crypto format
-                const parsedAmount = ethers.parseUnits(amountString, 6);
+                // Convert normal count to crypto decimals (6 decimals for USDC)
+                const parsedAmount = ethers.parseUnits(amount, 6);
 
-                agentTerminal.innerHTML += `<p class="text-yellow-400">⏳ Prompting signature window... Please confirm on MetaMask.</p>`;
-                
-                // --- THE REAL BLOCKCHAIN TRANSACTION CALL ---
+                // --- CRITICAL STEP: THIS FORCES METAMASK TO POP UP ---
                 const tx = await contract.transfer(recipient, parsedAmount);
                 
-                agentTerminal.innerHTML += `<p class="text-yellow-500 animate-pulse">⚡ Tx Broadcasted! Waiting for block inclusion... Hash: ${tx.hash.substring(0,10)}...</p>`;
-                
-                // Wait for blockchain confirmation
+                agentTerminal.innerHTML = `
+                    <p class="text-yellow-400 font-bold">⚡ Broadcast Success!</p>
+                    <p class="text-gray-500 text-[10px]">Awaiting blockchain confirmation... Hash: ${tx.hash.substring(0,12)}...</p>
+                `;
+
+                // Wait for the transaction to be mined on the blockchain
                 await tx.wait();
 
-                agentTerminal.innerHTML += `
+                agentTerminal.innerHTML = `
                     <div class="bg-emerald-500/10 border-l-2 border-emerald-500 p-2 text-emerald-400 rounded">
-                        🎉 Success! Native Settlement Confirmed.<br>
-                        <span class="text-gray-500 text-[10px]">Routing optimized natively with $0.00 base gas loss.</span>
+                        🎉 Success! Native Settlement Confirmed. <br>
+                        <span class="text-gray-400 text-[10px]">USDC has been successfully sent to target endpoint.</span>
                     </div>
                 `;
 
-                // Update real balance immediately after tx completes
-                await updateBalance(userAddress, network.chainId);
-                agentInput.value = "";
+                // Fetch new live balance automatically after transaction completes
+                await fetchLiveBalance(userAddress, network.chainId);
+                
+                // Clear fields
+                targetAddress.value = "";
+                targetAmount.value = "";
 
             } catch (err) {
-                agentTerminal.innerHTML += `<p class="text-red-500">❌ Execution Aborted: ${err.reason || err.message || "User denied tx"}</p>`;
+                console.error(err);
+                agentTerminal.innerHTML = `<p class="text-red-500">❌ Execution Aborted: ${err.reason || err.message || "Transaction denied by user"}</p>`;
             }
         }
 
-        connectBtn.addEventListener('click', initWallet);
-        sendCmdBtn.addEventListener('click', executeRealTransaction);
-
-        // Allow pressing 'Enter' key to send commands
-        agentInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') executeRealTransaction();
-        });
+        connectBtn.addEventListener('click', connectWallet);
+        sendTxBtn.addEventListener('click', handleRealTransfer);
     </script>
 </body>
 </html>
