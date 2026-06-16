@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC Multichain Agent v2 - Network Switcher</title>
+    <title>ARC Multichain Agent</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.1/ethers.umd.min.js"></script>
 </head>
@@ -13,10 +13,10 @@
         
         <div class="flex justify-between items-center bg-[#111622]/40 p-4 border border-[#1f2636] rounded-xl shadow-md">
             <div class="flex items-center gap-3">
-                <div class="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-[#0d121f] border border-[#2d374f]">
-                    <img src="1000227687.jpg" alt="Logo" class="h-full w-full object-cover">
+                <div class="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-[#0d121f]">
+                    <img src="https://raw.githubusercontent.com/YourUsername/YourRepo/main/1000227687.jpg" alt="Logo" class="h-full w-full object-cover" onerror="this.src='https://via.placeholder.com/32'">
                 </div>
-                <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC AGENT</h1>
+                <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC MULTICHAIN AGENT</h1>
             </div>
             <button id="connectBtn" class="text-xs bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-full font-mono">🔌 Connect</button>
         </div>
@@ -24,8 +24,7 @@
         <div class="bg-[#111622] border border-[#1f2636] rounded-2xl p-5 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-[#1f2636] pb-3">
                 <h2 class="text-sm font-semibold text-gray-200">📊 Wallet Session</h2>
-                
-                <select id="networkSwitcher" class="bg-[#080B11] text-[10px] border border-[#2d374f] rounded-lg px-2 py-1 text-cyan-400 font-mono outline-none cursor-pointer">
+                <select id="networkSwitcher" class="bg-[#080B11] text-[10px] border border-[#2d374f] rounded-lg px-2 py-1 text-cyan-400 font-mono cursor-pointer">
                     <option value="0x4cf0d2">Arc Testnet</option>
                     <option value="0xaa36a7">Sepolia</option>
                     <option value="0x66eee">Arbitrum Sepolia</option>
@@ -34,53 +33,38 @@
             </div>
             
             <div class="space-y-3 text-xs font-mono">
-                <div><span class="text-gray-400">Address</span><p id="addressTxt" class="text-gray-500 truncate">Not Connected</p></div>
+                <div><span class="text-gray-400">Status</span><p id="statusTxt" class="text-emerald-400">Disconnected</p></div>
+                <div><span class="text-gray-400">Account Address</span><p id="addressTxt" class="text-gray-500 break-all">--</p></div>
                 <div class="flex justify-between">
-                    <div><span class="text-gray-400">Chain</span><p id="chainName" class="text-cyan-400">--</p></div>
-                    <div class="text-right"><span class="text-gray-400">Balance</span><p id="balanceTxt" class="text-emerald-400">0.00 USDC</p></div>
+                    <div><span class="text-gray-400">Chain ID</span><p id="chainIdTxt" class="text-cyan-400">--</p></div>
+                    <div class="text-right"><span class="text-gray-400">USDC Balance</span><p id="balanceTxt" class="text-emerald-400">0.00 USDC</p></div>
                 </div>
             </div>
         </div>
 
         <div class="bg-[#111622] border border-[#1f2636] rounded-2xl p-5 shadow-xl space-y-4">
             <h2 class="text-sm font-semibold text-gray-200">Talk to Agent</h2>
-            <div id="chatLog" class="bg-[#080B11] border border-[#1f2636] rounded-xl p-3.5 font-mono text-[11px] h-40 overflow-y-auto">
-                <div class="text-gray-500">🤖 Agent: Network ready. Select chain to switch or chat to transact.</div>
-            </div>
-            <div class="flex gap-2">
-                <input id="chatInput" type="text" placeholder="Send 1 USDC..." class="flex-1 bg-[#080B11] border border-[#2d374f] rounded-xl px-3 py-2 text-xs font-mono text-white">
-                <button id="sendChatBtn" class="bg-blue-600 px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+            <p class="text-[11px] text-gray-400">Give instructions to routing system:</p>
+            <div id="chatLog" class="bg-[#080B11] border border-[#1f2636] rounded-xl p-3.5 font-mono text-[11px] min-h-[100px]">
+                <p class="text-gray-500">Example: Send 2 USDC from Arc Testnet to Arbitrum Testnet 0x...</p>
             </div>
         </div>
     </div>
 
     <script>
-        const networkSwitcher = document.getElementById('networkSwitcher');
-
-        // Network Switch Logic with MetaMask Popup
-        networkSwitcher.addEventListener('change', async (e) => {
-            const chainId = e.target.value;
+        // Network Switch Logic
+        document.getElementById('networkSwitcher').addEventListener('change', async (e) => {
             try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: chainId }],
-                });
-                alert("Network switched successfully!");
-                location.reload(); // Refresh to update balance on new chain
-            } catch (switchError) {
-                console.error("Switch failed", switchError);
-                alert("Please add/approve the network in MetaMask.");
-            }
+                await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: e.target.value }] });
+            } catch (err) { alert("Switch failed"); }
         });
 
-        // Wallet Connection & Init logic remains same as previous...
+        // Wallet Connection Logic
         document.getElementById('connectBtn').addEventListener('click', async () => {
             if (window.ethereum) {
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                const accounts = await provider.send("eth_requestAccounts", []);
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 document.getElementById('addressTxt').innerText = accounts[0];
-                const net = await provider.getNetwork();
-                document.getElementById('chainName').innerText = "Chain ID: " + net.chainId;
+                document.getElementById('statusTxt').innerText = "Connected";
             }
         });
     </script>
