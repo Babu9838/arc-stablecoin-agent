@@ -1,12 +1,43 @@
-<div class="flex justify-between items-center bg-[#111622]/40 p-4 border border-[#1f2636] rounded-xl shadow-md">
-    <div class="flex items-center gap-3">
-        <div class="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center border border-[#2d374f]">
-            <img src="1000227687.jpg" alt="Arc Logo" class="h-full w-full object-cover">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARC Multichain Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#080B11] text-white min-h-screen p-4">
+
+    <div class="max-w-md mx-auto space-y-4">
+        <div class="flex items-center justify-between bg-[#111622] p-4 rounded-xl border border-[#1f2636]">
+            <div class="flex items-center gap-2">
+                <img src="1000227687.jpg" alt="Arc Logo" class="h-8 w-8 rounded-lg object-cover">
+                <h1 class="text-xs font-bold text-blue-400 uppercase tracking-wider">ARC MULTICHAIN AGENT</h1>
+            </div>
+            <button class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/40 px-3 py-1 rounded-full">Connect</button>
         </div>
-        <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC MULTICHAIN AGENT</h1>
+
+        <div class="bg-[#111622] p-5 rounded-2xl border border-[#1f2636]">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-semibold">📊 Wallet Session</h2>
+            </div>
+            <div class="space-y-3 text-xs text-gray-400">
+                <p>Address: <span class="text-white">0xef08...52de</span></p>
+                <p>Chain ID: <span class="text-cyan-400">5042002</span></p>
+                <p>Balance: <span class="text-emerald-400">73.21 USDC</span></p>
+            </div>
+        </div>
+
+        <div class="bg-[#111622] p-5 rounded-2xl border border-[#1f2636]">
+            <h2 class="text-sm font-semibold mb-2">Talk to Agent</h2>
+            <div class="bg-[#080B11] p-3 rounded-xl border border-[#2d374f] h-32 mb-2 text-xs text-gray-500">
+                Agent: Secure node established...
+            </div>
+            <div class="flex gap-2">
+                <input type="text" placeholder="Send 1 USDC..." class="flex-1 bg-[#080B11] border border-[#2d374f] rounded-xl px-3 py-2 text-xs">
+                <button class="bg-blue-600 px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+            </div>
+        </div>
     </div>
-    
-    <button id="connectBtn" class="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-full font-mono font-medium transition-all cursor-pointer">
-        🔌 Connect
-    </button>
-</div>
+</body>
+</html>
