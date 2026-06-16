@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC Multichain Agent v2 - AI Chat Real Tx</title>
+    <title>ARC Multichain Agent v2 - Offical Logo & Chat Tx</title>
     <!-- Tailwind CSS for Dark Mode Styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Ethers.js for Live Wallet and Smart Contract Interactivity -->
@@ -14,10 +14,13 @@
     <!-- Main Wrapper App Container -->
     <div class="w-full max-w-md space-y-4 my-6">
         
-        <!-- App Header (Matching image 1000249474_2.jpg) -->
+        <!-- App Header (With Official Arc Logo from 1000227687.jpg) -->
         <div class="flex justify-between items-center bg-[#111622]/40 p-4 border border-[#1f2636] rounded-xl shadow-md">
-            <div class="flex items-center gap-2.5">
-                <div class="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-xs shadow-lg shadow-blue-500/20">Ω</div>
+            <div class="flex items-center gap-3">
+                <!-- Official Arc Logo Container -->
+                <div class="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center border border-[#2d374f] shadow-lg shadow-blue-500/10">
+                    <img src="1000227687.jpg" alt="Arc Official Logo" class="h-full w-full object-cover">
+                </div>
                 <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC MULTICHAIN AGENT</h1>
             </div>
             <!-- Dynamic Connection Button -->
@@ -70,7 +73,7 @@
                 <p class="text-[11px] text-gray-400">Give instructions to routing system via chat:</p>
             </div>
 
-            <!-- 💬 Real Chat Option Box (Scrollable) -->
+            <!-- Real Chat Box (Scrollable) -->
             <div id="chatLog" class="bg-[#080B11] border border-[#1f2636] rounded-xl p-3.5 font-mono text-[11px] space-y-3 h-64 overflow-y-auto flex flex-col">
                 <div class="text-gray-500">🤖 Agent: Core terminal online. Connect your wallet and type your transaction command (e.g., "Send 1 USDC to 0x...").</div>
             </div>
@@ -126,7 +129,6 @@
             chatInput.focus();
         }
 
-        // Helper function to automatically scroll chat to bottom
         function scrollToBottom() {
             chatLog.scrollTop = chatLog.scrollHeight;
         }
@@ -138,7 +140,6 @@
                 const contract = new ethers.Contract(contractAddress, usdcAbi, provider);
                 const balance = await contract.balanceOf(account);
                 
-                // USDC uses 6 decimals on almost all chains
                 const formatted = ethers.formatUnits(balance, 6);
                 balanceTxt.innerText = `${parseFloat(formatted).toFixed(2)} USDC`;
             } catch (err) {
@@ -182,7 +183,6 @@
             const message = chatInput.value.trim();
             if (!message) return;
 
-            // Clear input field immediately for chat experience
             chatInput.value = "";
 
             // Render user message in chat
@@ -199,7 +199,6 @@
                 return;
             }
 
-            // Advanced Regular Expressions to securely extract address and amount directly from sentences
             const addressRegex = /(0x[a-fA-F0-9]{40})/;
             const amountRegex = /([0-9.]+)\s*USDC/i;
 
@@ -227,10 +226,9 @@
                 const contractAddress = tokenContracts[network.chainId.toString()] || tokenContracts["DEFAULT_ARC"];
                 const contract = new ethers.Contract(contractAddress, usdcAbi, signer);
 
-                // Convert text amount string to 6-decimal crypto configuration
                 const parsedAmount = ethers.parseUnits(amountString, 6);
 
-                // 🔥 THE CRITICAL BIT: FORCES METAMASK POPUP FROM CHAT INTENT
+                // FORCES METAMASK POPUP FROM CHAT INTENT
                 const tx = await contract.transfer(recipient, parsedAmount);
                 
                 chatLog.innerHTML += `
@@ -239,7 +237,6 @@
                 `;
                 scrollToBottom();
 
-                // Wait for blockchain to mine the transaction blocks
                 await tx.wait();
 
                 chatLog.innerHTML += `
@@ -250,7 +247,7 @@
                 `;
                 scrollToBottom();
 
-                // 🔄 Real Balance is automatically cut from the session display instantly
+                // Real Balance is automatically cut from the session display instantly
                 await fetchLiveBalance(userAddress, network.chainId);
 
             } catch (err) {
@@ -260,11 +257,9 @@
             }
         }
 
-        // Event Listeners for UI triggers
         connectBtn.addEventListener('click', connectWallet);
         sendChatBtn.addEventListener('click', processChatCommand);
         
-        // Listen to keyboard 'Enter' key inside chat input box
         chatInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') processChatCommand();
         });
