@@ -1,86 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC Multichain Agent</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.1/ethers.umd.min.js"></script>
-</head>
-<body class="min-h-screen bg-[#080B11] text-white font-sans p-4 flex flex-col items-center">
-
-    <div class="w-full max-w-md space-y-4 my-6">
-        
-        <div class="flex justify-between items-center bg-[#111622]/40 p-4 border border-[#1f2636] rounded-xl shadow-md">
-            <div class="flex items-center gap-3">
-                <div class="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-[#0d121f] border border-[#2d374f]">
-                    <img src="1000227687.jpg" alt="Logo" class="h-full w-full object-cover">
-                </div>
-                <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC AGENT</h1>
-            </div>
-            <button id="connectBtn" class="text-xs bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-full font-mono">🔌 Connect</button>
+<div class="flex justify-between items-center bg-[#111622]/40 p-4 border border-[#1f2636] rounded-xl shadow-md">
+    <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center border border-[#2d374f]">
+            <img src="1000227687.jpg" alt="Arc Logo" class="h-full w-full object-cover">
         </div>
-
-        <div class="bg-[#111622] border border-[#1f2636] rounded-2xl p-5 shadow-xl space-y-4">
-            <div class="flex justify-between items-center border-b border-[#1f2636] pb-3">
-                <h2 class="text-sm font-semibold text-gray-200">📊 Wallet Session</h2>
-                <select id="networkSwitcher" class="bg-[#080B11] text-[10px] border border-[#2d374f] rounded-lg px-2 py-1 text-cyan-400 font-mono cursor-pointer outline-none">
-                    <option value="0x4cf0d2">Arc Testnet</option>
-                    <option value="0xaa36a7">Sepolia</option>
-                    <option value="0x66eee">Arbitrum Sepolia</option>
-                    <option value="0x14a33">Base Sepolia</option>
-                </select>
-            </div>
-            
-            <div class="space-y-3 text-xs font-mono">
-                <div><span class="text-gray-400">Address</span><p id="addressTxt" class="text-gray-500 truncate">Not Connected</p></div>
-                <div class="flex justify-between">
-                    <div><span class="text-gray-400">Chain</span><p id="chainName" class="text-cyan-400">--</p></div>
-                    <div class="text-right"><span class="text-gray-400">Balance</span><p id="balanceTxt" class="text-emerald-400">0.00 USDC</p></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-[#111622] border border-[#1f2636] rounded-2xl p-5 shadow-xl space-y-4">
-            <h2 class="text-sm font-semibold text-gray-200">Talk to Agent</h2>
-            <div id="chatLog" class="bg-[#080B11] border border-[#2d374f] rounded-xl p-3.5 font-mono text-[11px] h-40 overflow-y-auto">
-                <div class="text-gray-500">🤖 Agent: Network ready. Send 1 USDC to 0x...</div>
-            </div>
-            <div class="flex gap-2">
-                <input id="chatInput" type="text" placeholder="Send 1 USDC..." class="flex-1 bg-[#080B11] border border-[#2d374f] rounded-xl px-3 py-2 text-xs font-mono text-white outline-none focus:border-blue-500">
-                <button id="sendChatBtn" class="bg-blue-600 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:bg-blue-700">Send</button>
-            </div>
-        </div>
+        <h1 class="text-sm font-bold tracking-wider text-blue-400 uppercase">ARC MULTICHAIN AGENT</h1>
     </div>
-
-    <script>
-        // Network Switch Logic
-        document.getElementById('networkSwitcher').addEventListener('change', async (e) => {
-            try {
-                await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: e.target.value }] });
-                location.reload();
-            } catch (err) { alert("Switch rejected or Network not added."); }
-        });
-
-        // Connection Logic
-        document.getElementById('connectBtn').addEventListener('click', async () => {
-            if (window.ethereum) {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                document.getElementById('addressTxt').innerText = accounts[0];
-                const net = await window.ethereum.request({ method: 'eth_chainId' });
-                document.getElementById('chainName').innerText = "ID: " + net;
-            }
-        });
-
-        // Chat Send Action
-        document.getElementById('sendChatBtn').addEventListener('click', () => {
-            const input = document.getElementById('chatInput');
-            if(input.value) {
-                document.getElementById('chatLog').innerHTML += `<div class="text-white mt-1">👤 You: ${input.value}</div>`;
-                input.value = "";
-                // আপনার আগের লজিক অনুযায়ী এখানে ট্রান্সফার ফাংশন কল হবে
-            }
-        });
-    </script>
-</body>
-</html>
+    
+    <button id="connectBtn" class="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-full font-mono font-medium transition-all cursor-pointer">
+        🔌 Connect
+    </button>
+</div>
